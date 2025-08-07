@@ -1,6 +1,7 @@
 import pygame
 import time
 pygame.init()
+pygame.mixer.init()
 #set dimensions of the screen
 w = 1700
 h = 1000
@@ -24,6 +25,8 @@ pic3 = pygame.transform.scale(pic3,(150,150))
 pic3 = pygame.transform.rotate(pic3,270)
 red = pygame.Rect(redx,redy,150,150)
 yel = pygame.Rect(yelx,yely,150,150)
+hit = pygame.mixer.Sound("Grenade+1.mp3")
+fire = pygame.mixer.Sound("Gun+Silencer.mp3")
 redb = []
 yelb = []
 run = True
@@ -43,9 +46,11 @@ while run:
             if event.key == pygame.K_SPACE:
                 bullet = pygame.Rect(red.x + 150,red.y + 75,10,5)
                 redb.append(bullet)
+                fire.play()
             if event.key == pygame.K_q:
                 bullet = pygame.Rect(yel.x + 0,yel.y + 75,10,5)
                 yelb.append(bullet)
+                fire.play()
     keys = pygame.key.get_pressed()
     if keys[pygame.K_DOWN] and red.y < h-150:
         red.y += 5
@@ -69,12 +74,14 @@ while run:
         if bullet.colliderect(yel):
             redb.remove(bullet)
             yh -= 5
+            hit.play()
     for bullet in yelb:
         pygame.draw.rect(screen,"yellow",bullet)
         bullet.x -= 5
         if bullet.colliderect(red):
             yelb.remove(bullet)
             rh -= 5
+            hit.play()
     if rh <= 0:
         ywt=font1.render("Yellow Wins!",True,(255,255,0))
         screen.blit(ywt,(724,500))
